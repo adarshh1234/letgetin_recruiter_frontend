@@ -17,6 +17,20 @@ export const apiClient: AxiosInstance = axios.create({
   timeout: 90000,
 });
 
+// Request interceptor: attach Authorization header if accessToken is available
+apiClient.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('accessToken');
+      if (token && !config.headers.Authorization) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
@@ -84,12 +98,24 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // Request token refresh from backend (which uses HTTPOnly refreshToken cookie)
-        await axios.post(
+        const storedRefreshToken = typeof window !== 'undefined' ? localStorage.getItem('refreshToken') : null;
+        // Request token refresh from backend (which uses HTTPOnly refreshToken cookie and/or body refreshToken)
+        const refreshResponse = await axios.post(
           `${NEXT_PUBLIC_API_URL}/auth/refresh`,
-          {},
+          { refreshToken: storedRefreshToken },
           { withCredentials: true }
         );
+
+        const newAccessToken = refreshResponse.data?.data?.accessToken;
+        const newRefreshToken = refreshResponse.data?.data?.refreshToken;
+        if (typeof window !== 'undefined') {
+          if (newAccessToken) localStorage.setItem('accessToken', newAccessToken);
+          if (newRefreshToken) localStorage.setItem('refreshToken', newRefreshToken);
+        }
+
+        if (originalRequest.headers && newAccessToken) {
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        }
 
         isRefreshing = false;
         processQueue(null);
@@ -97,6 +123,10 @@ apiClient.interceptors.response.use(
       } catch (refreshError) {
         isRefreshing = false;
         processQueue(refreshError);
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+        }
 
         // Only redirect to /auth if currently on a protected route and not already on /auth
         const PROTECTED_PREFIXES = [

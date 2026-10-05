@@ -43,6 +43,24 @@ export interface SendOtpApiResponse {
 }
 
 export class AuthService {
+  private static saveTokens(data?: AuthResponseData): void {
+    if (typeof window !== 'undefined' && data) {
+      if (data.accessToken) {
+        localStorage.setItem('accessToken', data.accessToken);
+      }
+      if (data.refreshToken) {
+        localStorage.setItem('refreshToken', data.refreshToken);
+      }
+    }
+  }
+
+  private static clearTokens(): void {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+    }
+  }
+
   static async sendEmailOtp(email: string): Promise<{ cooldown: number }> {
     const response = await apiClient.post<never, SendOtpApiResponse>('/auth/send-email-otp', { email });
     return response.data;
@@ -58,6 +76,7 @@ export class AuthService {
     entityType?: EntityType;
   }): Promise<UserProfile> {
     const response = await apiClient.post<never, AuthApiResponse>('/auth/verify-email-otp', data);
+    this.saveTokens(response.data);
     return response.data.user;
   }
 
@@ -92,6 +111,7 @@ export class AuthService {
     entityType?: EntityType;
   }): Promise<UserProfile> {
     const response = await apiClient.post<never, AuthApiResponse>('/auth/verify-whatsapp-otp', data);
+    this.saveTokens(response.data);
     return response.data.user;
   }
 
@@ -107,21 +127,29 @@ export class AuthService {
 
   static async login(data: { email?: string; phone?: string; emailOrPhone?: string; password: string }): Promise<UserProfile> {
     const response = await apiClient.post<never, AuthApiResponse>('/auth/login', data);
+    this.saveTokens(response.data);
     return response.data.user;
   }
 
   static async googleLogin(credential: string): Promise<UserProfile> {
     const response = await apiClient.post<never, AuthApiResponse>('/auth/google', { credential });
+    this.saveTokens(response.data);
     return response.data.user;
   }
 
   static async refresh(): Promise<UserProfile> {
-    const response = await apiClient.post<never, AuthApiResponse>('/auth/refresh');
+    const storedRefreshToken = typeof window !== 'undefined' ? localStorage.getItem('refreshToken') : undefined;
+    const response = await apiClient.post<never, AuthApiResponse>('/auth/refresh', { refreshToken: storedRefreshToken });
+    this.saveTokens(response.data);
     return response.data.user;
   }
 
   static async logout(): Promise<void> {
-    await apiClient.post('/auth/logout');
+    try {
+      await apiClient.post('/auth/logout');
+    } finally {
+      this.clearTokens();
+    }
   }
 
   static async fetchCurrentUser(): Promise<UserProfile> {
