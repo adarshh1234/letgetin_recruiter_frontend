@@ -16,7 +16,7 @@ import {
   AlertCircle,
   CheckCircle2,
 } from 'lucide-react';
-import { apiClient } from '../../../../shared/services/apiClient';
+import { apiClient, NEXT_PUBLIC_API_URL } from '../../../../shared/services/apiClient';
 import { MarkdownRenderer } from './MarkdownRenderer';
 
 interface ChatAnalysis {
@@ -154,7 +154,6 @@ export const FloatingAiChatbot: React.FC = () => {
     }));
 
     try {
-      const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
       const chatUrl = `${NEXT_PUBLIC_API_URL}/ai/chat`;
 
       let resData: any = null;

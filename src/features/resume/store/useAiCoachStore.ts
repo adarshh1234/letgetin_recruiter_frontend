@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { apiClient } from '@/shared/services/apiClient';
+import { apiClient, NEXT_PUBLIC_API_URL } from '@/shared/services/apiClient';
 import { useResumeStore } from './useResumeStore';
 
 export interface ChatSuggestionAction {
@@ -171,7 +171,6 @@ export const useAiCoachStore = create<AiCoachState>((set, get) => ({
     }));
 
     try {
-      const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
       const chatUrl = `${NEXT_PUBLIC_API_URL}/ai/chat`;
 
       let resData: any = null;

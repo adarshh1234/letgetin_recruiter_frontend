@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { NEXT_PUBLIC_API_URL } from '@/shared/services/apiClient';
 import { streamAiChat } from '@/shared/services/aiStream';
 import { aiAssistantService } from '../services/aiAssistantService';
 import {
@@ -14,7 +15,6 @@ import {
   AssistantResponseData,
 } from '../types';
 
-const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
 const CONTEXTS: AssistantContextType[] = ['explore', 'profile', 'resume', 'drive'];
 
 export interface ContextState {

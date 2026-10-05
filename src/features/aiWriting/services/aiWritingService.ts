@@ -1,4 +1,4 @@
-import { apiClient } from '@/shared/services/apiClient';
+import { apiClient, NEXT_PUBLIC_API_URL } from '@/shared/services/apiClient';
 import { AIWritingRequest } from '../types';
 
 interface ApiResponse<T> {
@@ -6,8 +6,6 @@ interface ApiResponse<T> {
   data: T;
   message?: string;
 }
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
 
 export const aiWritingService = {
   async generate(payload: AIWritingRequest): Promise<string> {
@@ -29,7 +27,7 @@ export const aiWritingService = {
     onChunk: (accumulated: string) => void,
     signal?: AbortSignal
   ): Promise<string> {
-    let response = await fetch(`${API_URL}/ai/writing`, {
+    let response = await fetch(`${NEXT_PUBLIC_API_URL}/ai/writing`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
@@ -38,9 +36,9 @@ export const aiWritingService = {
     });
 
     if (response.status === 401) {
-      const refreshed = await fetch(`${API_URL}/auth/refresh`, { method: 'POST', credentials: 'include', signal });
+      const refreshed = await fetch(`${NEXT_PUBLIC_API_URL}/auth/refresh`, { method: 'POST', credentials: 'include', signal });
       if (refreshed.ok) {
-        response = await fetch(`${API_URL}/ai/writing`, {
+        response = await fetch(`${NEXT_PUBLIC_API_URL}/ai/writing`, {
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
