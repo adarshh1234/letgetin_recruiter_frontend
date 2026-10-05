@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsx *)",
+      "PowerShell(Stop-Process -Id 30084 -Force -Confirm:$false)",
+      "Bash(cp \"C:\\\\Users\\\\Irfan\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Irfan-Code-Base-web-frontend-let-get-in\\\\20e4ec93-f7bb-4405-aedf-7404946cdc89\\\\scratchpad\\\\full-flow-verify.mjs\" \"c:/Irfan/Code Base/web-backend-let-get-in/full-flow-verify.mjs\")",
+      "Bash(node full-flow-verify.mjs)",
+<<<<<<< HEAD
+      "PowerShell(Stop-Process -Id 29524 -Force -Confirm:$false)",
+      "Read(//c/Users/Irfan/Downloads/letgetin-codebase/mock-server/src/data/**)",
+      "Bash(grep -A 15 \"app.\\(recruiter\\).recruiter.candidates.page.tsx$\")",
+      "Bash(grep -A 8 \"jobs.\\\\[jobId\\\\].page.tsx$\\\\|recruiter-onboarding..recruiter.setup.page.tsx$\\\\|components.auth.AuthPage.tsx$\\\\|components.layout.RecruiterShell.tsx$\\\\|features.auth.services.authService.ts$\")",
+      "Bash(grep -iE \"recruiter|AuthPage.tsx$\")",
+      "Bash(grep -A5 \"app.\\(recruiter\\).recruiter.cv-search.page.tsx$\")",
+      "Bash(awk ' *)",
+      "Bash(awk '/^C:/{f=$0; print_block=\"\"} {block=block\"\\\\n\"$0} /^C:.*candidates.page.tsx$/{flag=1} flag && /^$/{print block; flag=0; block=\"\"}' /tmp/lintout.txt)",
+      "Bash(grep -n -A3 \"recruiter.candidates.page.tsx$\" /tmp/lintout.txt)",
+      "Bash(grep -n -A6 \"recruiter.cv-search.page.tsx$\\\\|components.auth.AuthPage.tsx$\\\\|auth.services.authService.ts$\" /tmp/lintout.txt)",
+      "Bash(curl -s http://localhost:5001/api/health)",
+      "Bash(curl -s -o /dev/null -w \"frontend HTTP %{http_code}\\\\n\" http://localhost:3000)",
+      "Bash(node kanban-e2e-test.mjs)",
+      "Bash(node startup-parity-e2e-test.mjs)",
+      "Bash(curl -s -o /dev/null -w \"backend:%{http_code}\\\\n\" http://localhost:5001/api/health)",
+      "Bash(curl -s -o /dev/null -w \"frontend:%{http_code}\\\\n\" http://localhost:3000)",
+      "Bash(node nav-profile-e2e-test.mjs)",
+      "Bash(curl -s -o /dev/null -w \"institution-overview-unauth:%{http_code}\\\\n\" http://localhost:5001/api/institution/overview)",
+      "Bash(node institution-e2e-test.mjs)",
+      "Bash(node institution-phase4-e2e-test.mjs)",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{const p=JSON.parse\\(d\\);console.log\\(Object.keys\\({...p.dependencies,...p.devDependencies}\\).filter\\(k=>/playwright|cypress|puppeteer|selenium|testing-library|jest|vitest/i.test\\(k\\)\\)\\)}\\)\")",
+      "Bash(node full-e2e-business-flow-test.mjs)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(node -e ' *)",
+      "Bash(node _e2e_db_verify_tmp.mjs)"
+=======
+      "PowerShell(Stop-Process -Id 29524 -Force -Confirm:$false)"
+>>>>>>> origin/main
+    ]
+  }
+}
